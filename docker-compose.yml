@@ -1,0 +1,33 @@
+# version: '3.8'
+
+services: 
+  nestjs:
+    build: .
+    container_name: nestjs-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/nestdb
+    depends_on:
+      - mongo
+    networks:
+      - nest-mongo-network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - nest-mongo-network
+
+volumes:
+  mongo-data:
+
+networks:
+  nest-mongo-network:
+    driver: bridge
