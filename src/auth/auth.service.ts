@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/user/user.schema';
@@ -18,9 +19,9 @@ export class AuthService {
     const { email, password } = authDto;
     const existingUser = await this.userModel.findOne({ email });
     if (existingUser) {
-      throw new Error('User already exists');
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);  // Lanzamos una excepción de HTTP
     }
-
+  
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new this.userModel({ ...authDto, password: hashedPassword });
     return newUser.save();
