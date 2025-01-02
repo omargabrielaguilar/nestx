@@ -1,17 +1,46 @@
-import { Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User, UserDocument } from 'src/user/user.schema';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
+import { LoginDto, RegisterDto } from './dto/auth.dto';  // Importa correctamente el DTO
 
 @Injectable()
 export class AuthService {
-    constructor(
-        @InjectModel(User.name) private readonly userModel: Model<UserDocument>, private jwtService: JwtService,
-    ){}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<UserDocument>,
+    private jwtService: JwtService,
+  ) {}
 
-
-    async register(authDto: AuthDto): Promise<User> {
-        const {email, password} = authDto;
-        const existingUser 
+  // Método de registro
+  async register(authDto: RegisterDto): Promise<User> {
+    const { email, password } = authDto;
+    const existingUser = await this.userModel.findOne({ email });
+    if (existingUser) {
+      throw new Error('User already exists');
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new this.userModel({ ...authDto, password: hashedPassword });
+    return newUser.save();
+  }
+
+  // Método de login
+  async login(authDto: LoginDto): Promise<{ access_token: string }> {
+    const { email, password } = authDto;
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new Error('Invalid credentials');
+    }
+
+    const payload = { email: user.email, sub: user._id };
+    const access_token = this.jwtService.sign(payload);
+    return { access_token };
+  }
 }
