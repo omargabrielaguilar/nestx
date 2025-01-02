@@ -5,12 +5,12 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/user/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
-import { LoginDto, RegisterDto } from './dto/auth.dto';  // Importa correctamente el DTO
+import { LoginDto, RegisterDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<UserDocument>,
+    @InjectModel('User') private readonly userModel: Model<UserDocument>,  // Usamos 'User' para inyectar el modelo
     private jwtService: JwtService,
   ) {}
 
@@ -19,7 +19,7 @@ export class AuthService {
     const { email, password } = authDto;
     const existingUser = await this.userModel.findOne({ email });
     if (existingUser) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);  // Lanzamos una excepción de HTTP
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
   
     const hashedPassword = await bcrypt.hash(password, 10);

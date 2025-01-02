@@ -8,6 +8,7 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
+      - .env:/usr/src/app/.env  # Asegura que el archivo .env sea accesible dentro del contenedor
     environment:
       - MONGO_URI=mongodb://mongo:27017/nestdb
     depends_on:
