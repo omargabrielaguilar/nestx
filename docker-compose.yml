@@ -1,26 +1,28 @@
 version: '3.8'
 
 services:
+  # Servicio de MongoDB
   mongo:
     image: mongo:latest
     container_name: mongo
     ports:
-      - "27017:27017"
+      - "27017:27017"   # Exponemos el puerto para que la app pueda conectarse
     volumes:
-      - mongo_data:/data/db
+      - mongo_data:/data/db  # Persistimos los datos de MongoDB
     networks:
       - app-network
 
+  # Servicio de la aplicación NestJS
   app:
     build:
       context: .
     container_name: nestjs-app
     ports:
-      - "3000:3000"
+      - "3000:3000"   # Exponemos el puerto de la aplicación
     depends_on:
-      - mongo
+      - mongo   # Aseguramos que MongoDB esté listo antes de iniciar la app
     environment:
-      - MONGO_URI=mongodb://mongo:27017/nestdb
+      - MONGO_URI=mongodb://mongo:27017/nestdb   # Conexión con MongoDB
     networks:
       - app-network
     restart: always
