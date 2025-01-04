@@ -4,7 +4,7 @@ import { UserModule } from '../modules/user.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost:27017/nestjs-demo'),
+    MongooseModule.forRoot(process.env.MONGO_URI || ' mongodb://mongo:27017/nestdb'),
     UserModule,
   ],
 })

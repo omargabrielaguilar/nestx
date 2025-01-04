@@ -7,7 +7,7 @@ import { UserSchema } from '../../adapters/out/database/user.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]), // Define el esquema aquí más tarde
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]), 
   ],
   controllers: [UserController],
   providers: [MongoUserRepository],
