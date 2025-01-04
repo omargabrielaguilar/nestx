@@ -50,5 +50,5 @@ src/
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/tu-usuario/nestjs-boilerplate.git
+   git clone [github.com/tu-usuario/nestjs-boilerplate.git](https://github.com/omargabrielaguilar/nestx/)
    cd nestjs-boilerplate
