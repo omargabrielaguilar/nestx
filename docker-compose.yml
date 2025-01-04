@@ -1,34 +1,30 @@
-# version: '3.8'
+version: '3.8'
 
-services: 
-  nestjs:
-    build: .
+services:
+  app:
+    build:
+      context: .
     container_name: nestjs-app
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
-      - .:/usr/src/app
-      - .env:/usr/src/app/.env  # Asegura que el archivo .env sea accesible dentro del contenedor
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/nestdb
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env
     depends_on:
       - mongo
-    networks:
-      - nest-mongo-network
 
   mongo:
-    image: mongo:latest
-    container_name: mongo-db
+    image: mongo:6.0
+    container_name: mongodb
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
-      - mongo-data:/data/db
-    networks:
-      - nest-mongo-network
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: hexamongo
 
 volumes:
-  mongo-data:
-
-networks:
-  nest-mongo-network:
-    driver: bridge
+  mongodb_data:

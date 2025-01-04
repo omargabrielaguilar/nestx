@@ -23,6 +23,28 @@ Este boilerplate de **NestJS** está diseñado para simplificar la creación de 
 - **Jest**: Framework para pruebas unitarias.
 - **Swagger**: Para la documentación automática de la API.
 
+## Arquitecturas Hexagonal
+```text
+src/
+  ├── core/
+  │   ├── domain/
+  │   │   ├── entities/
+  │   │   ├── interfaces/
+  │   │   └── use-cases/
+  │   └── application/
+  │       └── services/  (orquestración de casos de uso)
+  ├── adapters/
+  │   ├── in/
+  │   │   ├── http/  (controladores NestJS)
+  │   └── out/
+  │       ├── database/  (repositorios)
+  │       └── external/  (Stripe, APIs externas)
+  ├── infrastructure/
+      ├── config/
+      ├── modules/
+      └── main.ts
+```
+
 ## 📦 Instalación
 
 1. Clona el repositorio:
